@@ -18,10 +18,13 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     const supabase = createClient();
+    // Use NEXT_PUBLIC_SITE_URL so the redirectTo always points to the real
+    // production domain on Vercel, not an internal serverless origin.
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin).replace(/\/$/, "");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/driver`,
+        redirectTo: `${siteUrl}/auth/callback?next=/driver`,
       },
     });
     if (error) console.error("Google auth error:", error.message);
